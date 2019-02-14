@@ -110,6 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'blog.UserInfo'  # 用原生的AbstractUse，要在这里告诉django一声
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
