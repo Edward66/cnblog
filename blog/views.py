@@ -4,9 +4,22 @@ from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 
 from django.shortcuts import render, HttpResponse
+from django.http import JsonResponse
 
 
 def login(request):
+    if request.method == 'POST':
+        response = {'user': None, 'msg': None}
+        user = request.POST.get('user')
+        pwd = request.POST.get('pwd')
+        valid_code = request.POST.get('valid_code')
+
+        valid_code_str = request.session.get('valid_code_str')
+        if valid_code.lower() == valid_code_str.lower():
+            pass
+        else:
+            response['msg'] = 'valid code error!'
+        return JsonResponse(response)
     return render(request, 'login.html')
 
 
@@ -45,6 +58,7 @@ def get_validCode_img(request):
     draw = ImageDraw.Draw(img)
     kumo_font = ImageFont.truetype('static/font/kumo.ttf', size=28)
 
+    valid_code_str = ''
     for i in range(5):
         random_num = str(random.randint(0, 9))
         random_low_alpha = chr(random.randint(97, 122))
@@ -52,8 +66,8 @@ def get_validCode_img(request):
         random_char = random.choice([random_num, random_low_alpha, random_high_alpha])
         draw.text((i * 50 + 20, 5), random_char, get_random_color(), font=kumo_font)
 
-        # draw.line()  # 画线
-        # draw.point()  # 画点
+        # 保存验证码字符串
+        valid_code_str += random_char
 
     # 噪点噪线
     width = 260
@@ -70,6 +84,15 @@ def get_validCode_img(request):
         x = random.randint(0, width)
         y = random.randint(0, height)
         draw.arc((x, y, x + 4, y + 4), 0, 90, fill=get_random_color())
+
+    request.session['valid_code_str'] = valid_code_str
+    """
+    1. asdasd12312asd 生成随机字符串
+    2. COOKIE {"sessionid":asdasd12312asd}
+    3. django-session
+        session-key      session-data
+        asdasd12312asd       {"valid_code_str:'12345"}
+    """
 
     f = BytesIO()  # 用完之后，BytesIO会自动清掉
     img.save(f, 'png')
