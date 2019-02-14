@@ -47,13 +47,29 @@ def get_validCode_img(request):
 
     for i in range(5):
         random_num = str(random.randint(0, 9))
-        random_low_alpha = chr(random.randint(95, 122))
+        random_low_alpha = chr(random.randint(97, 122))
         random_high_alpha = chr(random.randint(65, 90))
         random_char = random.choice([random_num, random_low_alpha, random_high_alpha])
         draw.text((i * 50 + 20, 5), random_char, get_random_color(), font=kumo_font)
 
         # draw.line()  # 画线
         # draw.point()  # 画点
+
+    # 噪点噪线
+    width = 260
+    height = 34
+    for i in range(10):
+        x1 = random.randint(0, width)
+        x2 = random.randint(0, width)
+        y1 = random.randint(0, height)
+        y2 = random.randint(0, height)
+        draw.line((x1, y1, x2, y2), fill=get_random_color())
+
+    for i in range(10):
+        draw.point([random.randint(0, width), random.randint(0, height)], fill=get_random_color())
+        x = random.randint(0, width)
+        y = random.randint(0, height)
+        draw.arc((x, y, x + 4, y + 4), 0, 90, fill=get_random_color())
 
     f = BytesIO()  # 用完之后，BytesIO会自动清掉
     img.save(f, 'png')
