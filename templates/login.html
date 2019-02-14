@@ -62,7 +62,10 @@
                 if (data.user) {
                     location.href = '/'
                 } else {
-                    $('#error').text(data.msg).css({'color': 'red', 'margin-left': '10px'})
+                    $('#error').text(data.msg).css({'color': 'red', 'margin-left': '10px'});
+                    setTimeout(function () {
+                        $('#error').text('')  // 3秒后清空error信息
+                    }, 3000)
                 }
             }
         })
