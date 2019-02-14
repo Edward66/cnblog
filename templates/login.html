@@ -37,7 +37,8 @@
                     </div>
                 </div>
 
-                <input type="button" value="提交" id="login_btn" class="btn btn-default pull-right">
+                <input type="button" value="提交" id="login_btn" class="btn btn-default ">
+                <span id="error"></span>
             </form>
         </div>
     </div>
@@ -58,7 +59,11 @@
             type: 'post',
             data: $('#fm').serialize(),
             success: function (data) {
-                console.log(data);
+                if (data.user) {
+                    location.href = '/'
+                } else {
+                    $('#error').text(data.msg).css({'color': 'red', 'margin-left': '10px'})
+                }
             }
         })
     })

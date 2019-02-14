@@ -3,6 +3,7 @@ from io import BytesIO
 
 from PIL import Image, ImageDraw, ImageFont
 
+from django.contrib import auth
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 
@@ -16,7 +17,12 @@ def login(request):
 
         valid_code_str = request.session.get('valid_code_str')
         if valid_code.lower() == valid_code_str.lower():
-            pass
+            user = auth.authenticate(username=user, password=pwd)
+            if user:
+                auth.login(request, user)  # request.user == 当前登录对象
+                response['user'] = user.username
+            else:
+                response['msg'] = 'usernmae or password wrongs'
         else:
             response['msg'] = 'valid code error!'
         return JsonResponse(response)
@@ -72,19 +78,20 @@ def get_validCode_img(request):
     # 噪点噪线
     width = 260
     height = 34
-    for i in range(10):
+    for i in range(5):
         x1 = random.randint(0, width)
         x2 = random.randint(0, width)
         y1 = random.randint(0, height)
         y2 = random.randint(0, height)
         draw.line((x1, y1, x2, y2), fill=get_random_color())
 
-    for i in range(10):
+    for i in range(5):
         draw.point([random.randint(0, width), random.randint(0, height)], fill=get_random_color())
         x = random.randint(0, width)
         y = random.randint(0, height)
         draw.arc((x, y, x + 4, y + 4), 0, 90, fill=get_random_color())
 
+    # 保存验证码字符串到该用户的session
     request.session['valid_code_str'] = valid_code_str
     """
     1. asdasd12312asd 生成随机字符串
@@ -99,3 +106,7 @@ def get_validCode_img(request):
     data = f.getvalue()
 
     return HttpResponse(data)
+
+
+def index(request):
+    return render(request, 'index.html')
