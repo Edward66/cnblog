@@ -23,19 +23,38 @@
                 {% endfor %}
 
                 <div class="form-group">
-                    <label for="id_avator">头像
+                    <label for="id_avatar">头像
                         <img width="60" height="60" id="avatar_img" src="/static/blog/img/default_avatar.jpg">
                     </label>
 
-                    <input type="file" name="avator" id="id_avator" class="hidden">
+                    <input type="file" name="avatar" id="id_avatar" class="hidden">
                 </div>
 
                 <input type="button" class="btn btn-info" value="提交">
-
             </form>
         </div>
     </div>
 </div>
 
+<script src="/static/blog/js/jquery-3.3.1.js"></script>
+<script>
+    // 头像预览功能
+    $('#id_avatar').change(function () {   // 图片发生了变化，所以要用change事件
+        // 获取用户选中的文件对象
+        let file_obj = $(this)[0].files[0];
+
+        // 获取文件对象的路径
+        let reader = new FileReader();  // 等同于在python里拿到了实例对象
+        reader.readAsDataURL(file_obj);
+
+        reader.onload = function () {
+            // 修改img的src属性，src = 文件对象的路径
+            $("#avatar_img").attr('src', reader.result);  // 这个是异步，速度比reader读取路径要快，
+                                                          // 所以要等reader加载完后在执行。
+        }
+
+
+    })
+</script>
 </body>
 </html>
