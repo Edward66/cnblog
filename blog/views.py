@@ -51,12 +51,20 @@ def register(request):
             email = form.cleaned_data.get('email')
             avatar_obj = request.FILES.get('avatar')
 
-            user_obj = UserInfo.objects.create_user(
-                username=user,
-                password=pwd,
-                email=email,
-                avatar=avatar_obj,
-            )
+            if avatar_obj:
+                user_obj = UserInfo.objects.create_user(
+                    username=user,
+                    password=pwd,
+                    email=email,
+                    avatar=avatar_obj,
+                )
+            else:
+                user_obj = UserInfo.objects.create_user(
+                    username=user,
+                    password=pwd,
+                    email=email,
+                )
+
         else:
             response['msg'] = form.errors
 
