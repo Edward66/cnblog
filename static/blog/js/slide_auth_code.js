@@ -6,10 +6,8 @@ let handlerPopup = function (captchaObj) {
             url: "", // 进行二次验证
             type: "post",
             dataType: "json",
-            data: {
-                user: $('#user').val(),
-                pwd: $('#pwd').val(),
-            },
+            data: $('#fm').serialize(),
+
             success: function (data) {
                 if (data.user) {
                     location.href = '/index/'
