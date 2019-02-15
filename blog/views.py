@@ -4,6 +4,7 @@ from django.http import JsonResponse
 
 from blog.utils.slide_auth_code import pcgetcaptcha
 from blog.forms.regForm import RegForm
+from blog.models import UserInfo
 
 
 # 登陆
@@ -43,6 +44,19 @@ def register(request):
         response = {'user': None, 'msg': None}
         if form.is_valid():
             response['user'] = form.cleaned_data.get('user')
+
+            # 生成一条用户记录信息
+            user = form.cleaned_data.get('user')
+            pwd = form.cleaned_data.get('pwd')
+            email = form.cleaned_data.get('email')
+            avatar_obj = request.FILES.get('avatar')
+
+            user_obj = UserInfo.objects.create_user(
+                username=user,
+                password=pwd,
+                email=email,
+                avatar=avatar_obj,
+            )
         else:
             response['msg'] = form.errors
 

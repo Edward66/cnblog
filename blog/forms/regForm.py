@@ -60,11 +60,12 @@ class RegForm(forms.Form):
     )
 
     def clean_user(self):
-        user = self.cleaned_data.get('user')
-        UserInfo.objects.filter(username=user).first()
+        username = self.cleaned_data.get('user')
+
+        user = UserInfo.objects.filter(username=username).first()
 
         if not user:
-            return user
+            return username
         else:
             raise ValidationError('该用户已注册')
 

@@ -10,7 +10,7 @@ urlpatterns = [
     re_path('index/', views.index, name='index'),
 
     # 登陆页面和滑动验证码
-    path('login/', views.login),
+    path('login/', views.login, name='login'),
     re_path(r'^pc-geetest/register', slide_code_auth, name='pcgetcaptcha'),
 
     # 注册页面

@@ -73,6 +73,7 @@
             success: function (data) {
                 if (data.user) {
                     // 注册成功
+                    location.href = '{% url "blog:login" %}'
                 } else {
                     // 注册失败
 
