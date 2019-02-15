@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>注册页面</title>
     <link rel="stylesheet" href="/static/blog/bs/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/blog/css/register.css">
 </head>
 <body>
 <h3>注册页面</h3>
@@ -20,6 +21,15 @@
                         {{ field }}
                     </div>
                 {% endfor %}
+
+                <div class="form-group">
+                    <label for="id_avator">头像
+                        <img width="60" height="60" id="avatar_img" src="/static/blog/img/default_avatar.jpg">
+                    </label>
+
+                    <input type="file" name="avator" id="id_avator" class="hidden">
+                </div>
+
                 <input type="button" class="btn btn-info" value="提交">
 
             </form>
