@@ -3,8 +3,10 @@ from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 
 from blog.utils.slide_auth_code import pcgetcaptcha
+from blog.forms.regForm import RegForm
 
 
+# 登陆
 def login(request):
     if request.method == "POST":
         response = {'user': None, 'msg': None}
@@ -28,5 +30,16 @@ def slide_code_auth(request):
     return HttpResponse(response_str)
 
 
+# 首页
 def index(request):
     return render(request, 'index.html')
+
+
+# 注册页面
+def register(request):
+    form = RegForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'register.html', context=context)

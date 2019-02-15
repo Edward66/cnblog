@@ -1,3 +1,6 @@
+"""
+图片验证码
+"""
 import random
 from io import BytesIO
 

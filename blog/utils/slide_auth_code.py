@@ -1,3 +1,6 @@
+"""
+滑动验证码
+"""
 from blog.geetest import GeetestLib
 
 pc_geetest_id = "b46d1900d0a894591916ea94ea91bd2c"

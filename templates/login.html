@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>登陆页面</title>
     <link rel="stylesheet" href="/static/blog/css/slide_auth_code.css">
     <link rel="stylesheet" href="/static/blog/bs/css/bootstrap.css">
 </head>
@@ -28,8 +28,8 @@
 
                 <input class="btn btn-default" id="popup-submit" type="submit" value="提交">
                 <span id="error-info"></span>
+                <a href="{% url 'blog:register' %}" class="btn btn-success pull-right">注册</a>
                 <div id="popup-captcha"></div>
-
             </div>
         </div>
     </div>
