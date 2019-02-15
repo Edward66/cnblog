@@ -37,6 +37,17 @@ def index(request):
 
 # 注册页面
 def register(request):
+    if request.is_ajax():
+        print(request.POST)
+        form = RegForm(request.POST)
+        response = {'user': None, 'msg': None}
+        if form.is_valid():
+            response['user'] = form.cleaned_data.get('user')
+        else:
+            response['msg'] = form.errors
+
+        return JsonResponse(response)
+
     form = RegForm()
 
     context = {
