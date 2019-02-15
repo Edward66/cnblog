@@ -81,6 +81,9 @@
                     $('.form-group').removeClass('has-error');
                     // 展示此次提交的错误信息
                     $.each(data.msg, function (field, error_list) {
+                        if (field === '__all__') {  // 全局错误信息，在全局钩子里自己定义的
+                            $('#id_re_pwd').next().html(error_list[0]);
+                        }
                         $('#id_' + field).next().html(error_list[0]);
                         $('#id_' + field).parent().addClass('has-error');  // has-error是bootstrap提供的
                     });
