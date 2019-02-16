@@ -20,6 +20,9 @@ urlpatterns = [
     re_path(r'^pc-geetest/register', slide_code_auth, name='pcgetcaptcha'),
 
     # media配置
-    re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})  # 主要以media开头，后面写什么都行
+    re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),  # 主要以media开头，后面写什么都行
+
+    # 个人站点
+    re_path('^(?P<username>\w+)$', views.home_site, name='home_site'),
 
 ]
