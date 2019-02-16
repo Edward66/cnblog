@@ -1,10 +1,11 @@
 from django.contrib import auth
+from django.shortcuts import HttpResponse, render, redirect
 from django.http import JsonResponse
-from django.shortcuts import render, HttpResponse, redirect
 from django.urls import reverse
 
-from blog.forms.regForm import RegForm
+from blog import models
 from blog.models import UserInfo
+from blog.forms.regForm import RegForm
 from blog.utils.slide_auth_code import pcgetcaptcha
 
 
@@ -40,7 +41,11 @@ def slide_code_auth(request):
 
 # 首页
 def index(request):
-    return render(request, 'index.html')
+    article_list = models.Article.objects.all()
+    context = {
+        'article_list': article_list,
+    }
+    return render(request, 'index.html', context=context)
 
 
 # 注册页面

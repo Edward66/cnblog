@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title>index</title>
     <link rel="stylesheet" href="/static/blog/bs/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/blog/css/index.css">
     <script src="/static/blog/js/jquery-3.3.1.js"></script>
     <script src="/static/blog/bs/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 <!-- 导航区域 -->
@@ -33,7 +35,8 @@
             <ul class="nav navbar-nav navbar-right">
 
                 {% if request.user.is_authenticated %}
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{ request.user.username }}</a></li>
+                    <li><a href="#"><span
+                            class="glyphicon glyphicon-user user_icon"></span>{{ request.user.username }}</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false"><span class="caret"></span></a>
@@ -56,7 +59,7 @@
 </nav>
 
 
-<!-- 主题部分 -->
+<!-- 主体部分 -->
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3">
@@ -82,7 +85,32 @@
             </div>
 
         </div>
-        <div class="col-md-6">222</div>
+        <div class="col-md-6">
+            <div class="article_list">
+                {% for article in article_list %}
+                    <div class="article_item">
+                        <h5><a href="">{{ article.title }}</a></h5>
+                        <div class="article_desc">
+                            <span class="media-left">
+                                <a href=""><img width="56" height="56" src="media/{{ article.user.avatar }}"
+                                                alt="avatar"></a>
+                            </span>
+                            <span class="media-right">
+                                {{ article.desc }}
+                            </span>
+                        </div>
+                        <div class="small pub_info">
+                            <span><a href="">{{ article.user.username }}</a></span>
+                            <span>发布于{{ article.created_time | date:'Y-m-d H:i' }}</span>
+                            <span class="glyphicon glyphicon-comment"></span>评论{{ article.comment_count }}
+                            <span class="glyphicon glyphicon-thumbs-up"></span>点赞{{ article.up_count }}
+                        </div>
+                    </div>
+                    <hr>
+                {% endfor %}
+
+            </div>
+        </div>
         <div class="col-md-3">
             <div class="panel panel-primary">
                 <div class="panel-heading">Panel heading without title</div>
