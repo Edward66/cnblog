@@ -1,6 +1,7 @@
 from django.contrib import auth
 from django.http import JsonResponse
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
+from django.urls import reverse
 
 from blog.forms.regForm import RegForm
 from blog.models import UserInfo
@@ -23,6 +24,12 @@ def login(request):
             response['msg'] = '用户名或密码错误'
         return JsonResponse(response)
     return render(request, 'login.html')
+
+
+# 注销
+def logout(request):
+    auth.logout(request)  # request.session.flush()
+    return redirect(reverse('blog:login'))
 
 
 # 滑动验证码

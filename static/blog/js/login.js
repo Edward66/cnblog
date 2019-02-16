@@ -10,7 +10,7 @@ let handlerPopup = function (captchaObj) {
 
             success: function (data) {
                 if (data.user) {
-                    location.href = '/index/'
+                    location.href = '/'
                 } else {
                     $('#error-info').text(data.msg).css({'color': 'red', 'margin-left': '10px'});
                     setTimeout(function () {
