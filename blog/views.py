@@ -1,10 +1,10 @@
 from django.contrib import auth
-from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
+from django.shortcuts import render, HttpResponse
 
-from blog.utils.slide_auth_code import pcgetcaptcha
 from blog.forms.regForm import RegForm
 from blog.models import UserInfo
+from blog.utils.slide_auth_code import pcgetcaptcha
 
 
 # 登陆
@@ -39,7 +39,6 @@ def index(request):
 # 注册页面
 def register(request):
     if request.is_ajax():
-        print(request.POST)
         form = RegForm(request.POST)
         response = {'user': None, 'msg': None}
         if form.is_valid():
@@ -51,19 +50,16 @@ def register(request):
             email = form.cleaned_data.get('email')
             avatar_obj = request.FILES.get('avatar')
 
+            extra = {}
             if avatar_obj:
-                user_obj = UserInfo.objects.create_user(
-                    username=user,
-                    password=pwd,
-                    email=email,
-                    avatar=avatar_obj,
-                )
-            else:
-                user_obj = UserInfo.objects.create_user(
-                    username=user,
-                    password=pwd,
-                    email=email,
-                )
+                extra['avatar'] = avatar_obj
+            UserInfo.objects.create_user(
+                username=user,
+                password=pwd,
+                email=email,
+                **extra
+            )
+
 
         else:
             response['msg'] = form.errors
