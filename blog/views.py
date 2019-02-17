@@ -95,7 +95,8 @@ def home_site(request, username, **kwargs):
     :return:
     """
 
-    user = UserInfo.objects.filter(username=username).first()
+    context = get_query_data(username)
+    user = context['user']
 
     # 判断用户是否存在
     if not user:
@@ -115,40 +116,40 @@ def home_site(request, username, **kwargs):
             year, month = param.split('-')
             article_list = article_list.filter(created_time__year=year, created_time__month=month)
 
-    # 查询当前站点
+    context.update({'user': user, 'username': username, 'article_list': article_list})
+
+    return render(request, 'home_site.html', context=context)
+
+
+def get_query_data(username):
+    user = UserInfo.objects.filter(username=username).first()
     blog = user.blog
 
-    # 获取当前用户或者当前站点对应的所有文章
-
-    # 查询当前站点的每一个分类名称以及对应的文章数
     category_list = models.Category.objects.filter(blog=blog).values('pk').annotate(
         count=Count('article__title')).values_list(
         'title', 'count')
 
-    # 查询当前站点的每一个标签名称以及对应的文章数
     tag_list = models.Tag.objects.filter(blog=blog).values('pk').annotate(count=Count('article')).values_list(
         'title', 'count'
     )
 
-    # 查询当前站点的每一个年月名称以及对应的文章数
     date_list = models.Article.objects.filter(user=user).annotate(month=TruncMonth('created_time')).values_list(
         'month').annotate(
         count=Count('nid')).values_list(
         'month', 'count')
 
     context = {
-        'username': username,
         'user': user,
         'blog': blog,
-        'article_list': article_list,
         'category_list': category_list,
         'tag_list': tag_list,
-        'date_list': date_list,
+        'date_list': date_list
     }
-
-    return render(request, 'home_site.html', context=context)
+    return context
 
 
 # 文章详情页
 def article_detail(request, username, article_id):
-    return render(request, 'article_detail.html')
+    context = get_query_data(username)
+
+    return render(request, 'article_detail.html', context=context)
