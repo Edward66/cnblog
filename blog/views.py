@@ -88,7 +88,7 @@ def register(request):
     return render(request, 'register.html', context=context)
 
 
-def home_site(request, username):
+def home_site(request, username, **kwargs):
     """
     个人站点视图函数
     :param request:
@@ -101,11 +101,24 @@ def home_site(request, username):
     if not user:
         return render(request, 'not_found.html')
 
+    article_list = models.Article.objects.filter(user=user)
+
+    if kwargs:
+        condition = kwargs.get('condition')
+        param = kwargs.get('param')
+
+        if condition == 'category':
+            article_list = article_list.filter(category__title=param)
+        elif condition == 'tag':
+            article_list = article_list.filter(tags__title=param)
+        else:
+            year, month = param.split('-')
+            article_list = article_list.filter(created_time__year=year, created_time__month=month)
+
     # 查询当前站点
     blog = user.blog
 
     # 获取当前用户或者当前站点对应的所有文章
-    article_list = models.Article.objects.filter(user=user)
 
     # 查询当前站点的每一个分类名称以及对应的文章数
     category_list = models.Category.objects.filter(blog=blog).values('pk').annotate(
@@ -124,6 +137,7 @@ def home_site(request, username):
         'month', 'count')
 
     context = {
+        'username': username,
         'user': user,
         'blog': blog,
         'article_list': article_list,
