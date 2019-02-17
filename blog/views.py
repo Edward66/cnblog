@@ -95,8 +95,8 @@ def home_site(request, username, **kwargs):
     :return:
     """
 
-    context = get_query_data(username)
-    user = context['user']
+    user = UserInfo.objects.filter(username=username).first()
+    blog = user.blog
 
     # 判断用户是否存在
     if not user:
@@ -115,41 +115,22 @@ def home_site(request, username, **kwargs):
         else:
             year, month = param.split('-')
             article_list = article_list.filter(created_time__year=year, created_time__month=month)
-
-    context.update({'user': user, 'username': username, 'article_list': article_list})
+    context = {
+        'blog': blog,
+        'article_list': article_list,
+        'username': username,
+        'user': user,
+    }
 
     return render(request, 'home_site.html', context=context)
 
 
-def get_query_data(username):
-    user = UserInfo.objects.filter(username=username).first()
-    blog = user.blog
-
-    category_list = models.Category.objects.filter(blog=blog).values('pk').annotate(
-        count=Count('article__title')).values_list(
-        'title', 'count')
-
-    tag_list = models.Tag.objects.filter(blog=blog).values('pk').annotate(count=Count('article')).values_list(
-        'title', 'count'
-    )
-
-    date_list = models.Article.objects.filter(user=user).annotate(month=TruncMonth('created_time')).values_list(
-        'month').annotate(
-        count=Count('nid')).values_list(
-        'month', 'count')
-
-    context = {
-        'user': user,
-        'blog': blog,
-        'category_list': category_list,
-        'tag_list': tag_list,
-        'date_list': date_list
-    }
-    return context
-
-
 # 文章详情页
 def article_detail(request, username, article_id):
-    context = get_query_data(username)
-
+    user = UserInfo.objects.filter(username=username).first()
+    blog = user.blog
+    context = {
+        'username': username,
+        'blog': blog,
+    }
     return render(request, 'article_detail.html', context=context)
