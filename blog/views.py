@@ -109,7 +109,7 @@ def home_site(request, username):
 
     # 查询当前站点的每一个分类名称以及对应的文章数
     category_list = models.Category.objects.filter(blog=blog).values('pk').annotate(
-        count=Count('article__title')).values(
+        count=Count('article__title')).values_list(
         'title', 'count')
 
     # 查询当前站点的每一个标签名称以及对应的文章数
@@ -118,9 +118,18 @@ def home_site(request, username):
     )
 
     # 查询当前站点的每一个年月名称以及对应的文章数
-    date_list = models.Article.objects.filter(user=user).annotate(month=TruncMonth('created_time')).values(
+    date_list = models.Article.objects.filter(user=user).annotate(month=TruncMonth('created_time')).values_list(
         'month').annotate(
         count=Count('nid')).values_list(
         'month', 'count')
 
-    return render(request, 'home_site.html')
+    context = {
+        'user': user,
+        'blog': blog,
+        'article_list': article_list,
+        'category_list': category_list,
+        'tag_list': tag_list,
+        'date_list': date_list,
+    }
+
+    return render(request, 'home_site.html', context=context)

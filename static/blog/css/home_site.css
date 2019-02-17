@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 头部内容 */
+.header {
+    width: 100%;
+    height: 60px;
+    background-color: #369;
+}
+
+.header .title {
+    font-size: 18px;
+    font-weight: 100;
+    line-height: 60px;
+    color: #fff;
+    margin-left: 15px;
+    margin-top: -10px;
+}
+
+.backend {
+    float: right;
+    color: white;
+    line-height: 60px;
+    text-decoration: none;
+    font-size: 14px;
+    margin-right: 10px;
+    margin-top: 16px;
+}
+
+/* 主体内容 */
+
+.main_content {
+    margin-top: 20px;
+}
+
+.pub_info {
+    margin-top: 10px;
+    color: gray;
+}
