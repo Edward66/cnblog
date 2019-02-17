@@ -1,10 +1,11 @@
 from django.contrib import auth
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
 from django.shortcuts import HttpResponse, render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
 
 from blog import models
-from django.db.models import Count
 from blog.models import UserInfo
 from blog.forms.regForm import RegForm
 from blog.utils.slide_auth_code import pcgetcaptcha
@@ -104,10 +105,6 @@ def home_site(request, username):
     blog = user.blog
 
     # 获取当前用户或者当前站点对应的所有文章
-    # 基于对象查询
-    # aritlce_list = user.article_set.all()
-
-    # 基于双下划线查询
     article_list = models.Article.objects.filter(user=user)
 
     # 查询当前站点的每一个分类名称以及对应的文章数
@@ -121,5 +118,9 @@ def home_site(request, username):
     )
 
     # 查询当前站点的每一个年月名称以及对应的文章数
+    date_list = models.Article.objects.filter(user=user).annotate(month=TruncMonth('created_time')).values(
+        'month').annotate(
+        count=Count('nid')).values_list(
+        'month', 'count')
 
     return render(request, 'home_site.html')
