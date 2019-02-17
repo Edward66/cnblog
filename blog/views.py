@@ -129,7 +129,10 @@ def home_site(request, username, **kwargs):
 def article_detail(request, username, article_id):
     user = UserInfo.objects.filter(username=username).first()
     blog = user.blog
+
+    article_obj = models.Article.objects.filter(pk=article_id).first()
     context = {
+        'article_obj':article_obj,
         'username': username,
         'blog': blog,
     }

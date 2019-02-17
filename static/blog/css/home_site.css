@@ -29,6 +29,11 @@
     margin-top: 16px;
 }
 
+.title a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
 /* 主体内容 */
 
 .main_content {
