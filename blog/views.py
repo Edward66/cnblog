@@ -147,3 +147,8 @@ def home_site(request, username, **kwargs):
     }
 
     return render(request, 'home_site.html', context=context)
+
+
+# 文章详情页
+def article_detail(request, username, article_id):
+    return render(request, 'article_detail.html')

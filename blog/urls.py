@@ -22,6 +22,9 @@ urlpatterns = [
     # media配置
     re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),  # 主要以media开头，后面写什么都行
 
+    # 文章详情页
+    re_path(r'^(?P<username>\w+)/articles/(?P<article_id>\d+)$', views.article_detail),
+
     # 个人站点的跳转
     re_path(r'^(?P<username>\w+)/(?P<condition>tag|category|archive)/(?P<param>.*)/$', views.home_site),
 
