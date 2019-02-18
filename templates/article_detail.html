@@ -17,17 +17,34 @@
             {{ article_obj.content | safe }}
         </div>
 
-
-        <div id="div_digg">
-            <div class="diggit action">
-                <span class="diggnum" id="digg_count">{{ article_obj.up_count }}</span>
+        <!-- 点赞 -->
+        <div class="clearfix">
+            <div id="div_digg">
+                <div class="diggit action">
+                    <span class="diggnum" id="digg_count">{{ article_obj.up_count }}</span>
+                </div>
+                <div class="buryit action">
+                    <span class="burynum" id="bury_count">{{ article_obj.down_count }}</span>
+                </div>
+                <div class="clear"></div>
+                <div class="diggword" id="digg_tips"></div>
             </div>
-            <div class="buryit action">
-                <span class="burynum" id="bury_count">{{ article_obj.down_count }}</span>
-            </div>
-            <div class="clear"></div>
-            <div class="diggword" id="digg_tips"></div>
         </div>
+    </div>
+
+    <!-- 评论 -->
+    <div class="comments">
+        <p>发表评论</p>
+        <p>
+            昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50"
+                      value="{{ request.user.username }}">
+        </p>
+        <p>评论内容:</p>
+        <p>
+            <textarea name="" id="" cols="60" rows="10"></textarea>
+        </p>
+
+        <button class="btn btn-default" id="comment_btn">提交评论</button>
     </div>
 
     <script>
@@ -55,7 +72,6 @@
                         setTimeout(function () {
                             $('#digg_tips').html("");
                         }, 1000)
-
                     }
                 }
             })
