@@ -48,7 +48,7 @@
                     {% if comment.parent_comment_id %}
                         <div class="pid_info well">  <!-- well:和子评论形成间隙 -->
                             <p>
-                                {{ comment.parent_comment.user.username }}:{{ comment.parent_comment.content }}
+                                {{ comment.parent_comment.user.username }}: {{ comment.parent_comment.content }}
                             </p>
                         </div>
                     {% endif %}
@@ -112,6 +112,7 @@
             if (pid) {
                 let index = content.indexOf("\n");
                 content = content.slice(index + 1);
+
             }
             $.ajax({
                 url: '/comment/',
@@ -127,7 +128,24 @@
                     let username = data.username;
                     let content = data.content;
 
-                    let latest_comment = `
+                    if (data.parent_comment) {  // 用户提交的是子评论，同时显示父评论
+                        let latest_comment = `
+                    <li class="list-group-item">
+                    <div class='well'>
+                        <p>${data.parent_name}: ${data.parent_comment}</p>
+                    </div>
+                    <div>
+                        <span>${created_time}</span> &nbsp;&nbsp;
+                        <a href=""><span>${username}</span></a>
+                    </div>
+                    <div class="show_comment_content">
+                        <p>${content}</p>
+                    </div>
+                    </li>`;
+                        $('ul.comment_list').append(latest_comment);
+
+                    } else {  // 用户提价的是根评论，只显示用户提交的评论
+                        let latest_comment = `
                     <li class="list-group-item">
                     <div>
                         <span>${created_time}</span> &nbsp;&nbsp;
@@ -137,7 +155,8 @@
                         <p>${content}</p>
                     </div>
                     </li>`;
-                    $('ul.comment_list').append(latest_comment);
+                        $('ul.comment_list').append(latest_comment);
+                    }
 
                     // 清空评论框
                     $('#comment_content').val('');

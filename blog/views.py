@@ -190,5 +190,9 @@ def comment(request):
     response['created_time'] = comment_obj.created_time.strftime('%Y-%m%d %X')
     response['username'] = request.user.username
     response['content'] = content
+    if pid:
+        parent_comment = models.Comment.objects.filter(nid=pid).first()
+        response['parent_comment'] = parent_comment.content
+        response['parent_name'] = parent_comment.user.username
 
     return JsonResponse(response)
