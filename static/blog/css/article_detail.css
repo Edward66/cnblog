@@ -70,7 +70,16 @@ input.author {
     font-size: 13px;
 }
 
-.comment_content {
+.show_comment_content {
     margin-top: 10px;
+}
+
+.comment_info a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.comment_info a:hover {
+    color: #5cb85c;
 }
 
