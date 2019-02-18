@@ -24,6 +24,7 @@ urlpatterns = [
 
     # 评论
     path('comment/', views.comment),
+    path('get_comment_tree/', views.get_comment_tree),
 
     # media配置
     re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),  # 主要以media开头，后面写什么都行
