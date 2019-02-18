@@ -34,6 +34,8 @@
         $('#div_digg .action').click(function () {
             let is_up = $(this).hasClass('diggit');
 
+            $obj = $(this).children('span');
+
             $.ajax({
                 url: '/digg/',
                 type: 'post',
@@ -44,22 +46,11 @@
                 },
                 success: function (data) {
                     if (data.status) {
-                        if (is_up) {
-                            let val = parseInt($('#digg_count').text());
-                            $('#digg_count').text(val + 1);
-
-                        } else {
-                            let val = parseInt($('#bury_count').text());
-                            $('#bury_count').text(val + 1);
-                        }
-
-
+                        let val = parseInt($obj.text());
+                        $obj.text(val + 1);
                     } else {
-                        if (data.handled) {
-                            $('#digg_tips').html('您已经推荐过！');
-                        } else {
-                            $('#digg_tips').html('您已经反对过！');
-                        }
+                        let val = data.handled ? '您已经推荐过！' : '您已经反对过！';
+                        $('#digg_tips').html(val);
 
                         setTimeout(function () {
                             $('#digg_tips').html("");

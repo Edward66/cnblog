@@ -151,7 +151,7 @@ def digg(request):
     response = {'status': True}
     if not obj:
 
-        aud = models.ArticleUpDown.objects.create(
+        models.ArticleUpDown.objects.create(
             user_id=user_id,
             article_id=article_id,
             is_up=is_up,
