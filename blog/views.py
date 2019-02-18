@@ -1,9 +1,10 @@
 import json
 from django.contrib import auth
 from django.db.models import F
-from django.shortcuts import HttpResponse, render, redirect
+from django.db import transaction
 from django.http import JsonResponse
 from django.urls import reverse
+from django.shortcuts import HttpResponse, render, redirect
 
 from blog import models
 from blog.models import UserInfo
@@ -179,12 +180,14 @@ def comment(request):
     content = request.POST.get('content')
     user_id = request.user.pk
 
-    comment_obj = models.Comment.objects.create(
-        user_id=user_id,
-        article_id=article_id,
-        content=content,
-        parent_comment_id=pid
-    )
+    with transaction.atomic():  # 等同于mysql里的事物操作，下面两个操作必须同时成功，只要有一个失败那么都不会执行
+        comment_obj = models.Comment.objects.create(
+            user_id=user_id,
+            article_id=article_id,
+            content=content,
+            parent_comment_id=pid
+        )
+        models.Article.objects.filter(pk=article_id).update(comment_count=F('comment_count') + 1)
 
     response = {}
     response['created_time'] = comment_obj.created_time.strftime('%Y-%m%d %X')
