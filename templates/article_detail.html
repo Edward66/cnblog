@@ -41,11 +41,21 @@
                         <a href="">#{{ forloop.counter }}楼 &nbsp;&nbsp;</a>
                         <span>{{ comment.created_time | date:'Y-m-d H:i' }} </span> &nbsp;&nbsp;
                         <a href=""><span>{{ comment.user.username }}</span></a>
-                        <a class="pull-right reply_btn" username="{{ comment.user.username }}">回复</a>
+                        <a class="pull-right reply_btn" username="{{ comment.user.username }}"
+                           comment_pk='{{ comment.pk }}'>回复</a>
                     </div>
+
+                    {% if comment.parent_comment_id %}
+                        <div class="pid_info well">  <!-- well:和子评论形成间隙 -->
+                            <p>
+                                {{ comment.parent_comment.user.username }}:{{ comment.parent_comment.content }}
+                            </p>
+                        </div>
+                    {% endif %}
                     <div class="show_comment_content">
                         <p>{{ comment.content }}</p>
                     </div>
+
                 </li>
             {% endfor %}
         </ul>
@@ -95,9 +105,14 @@
         });
 
         // 评论请求
+        let pid = '';
         $('#comment_btn').click(function () {
-            let pid = '';
             let content = $('#comment_content').val();
+
+            if (pid) {
+                let index = content.indexOf("\n");
+                content = content.slice(index + 1);
+            }
             $.ajax({
                 url: '/comment/',
                 type: 'post',
@@ -126,6 +141,7 @@
 
                     // 清空评论框
                     $('#comment_content').val('');
+                    pid = "";
                 }
             })
         });
@@ -135,7 +151,10 @@
             $('#comment_content').focus();
             let comment_user = '@' + $(this).attr('username') + "\n";
             $('#comment_content').val(comment_user);
-        })
+
+            pid = $(this).attr('comment_pk');
+        });
 
     </script>
+
 {% endblock content %}

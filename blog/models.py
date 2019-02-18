@@ -116,7 +116,6 @@ class Comment(models.Model):
     article = models.ForeignKey(verbose_name='评论文章', to='Article', to_field='nid', on_delete=models.CASCADE)
     content = models.CharField(verbose_name='评论内容', max_length=255)
     created_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
-
     parent_comment = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
