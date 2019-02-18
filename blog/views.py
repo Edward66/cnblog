@@ -1,6 +1,6 @@
+import json
 from django.contrib import auth
-from django.db.models import Count
-from django.db.models.functions import TruncMonth
+from django.db.models import F
 from django.shortcuts import HttpResponse, render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
@@ -96,11 +96,12 @@ def home_site(request, username, **kwargs):
     """
 
     user = UserInfo.objects.filter(username=username).first()
-    blog = user.blog
 
     # 判断用户是否存在
     if not user:
         return render(request, 'not_found.html')
+
+    blog = user.blog
 
     article_list = models.Article.objects.filter(user=user)
 
@@ -132,8 +133,37 @@ def article_detail(request, username, article_id):
 
     article_obj = models.Article.objects.filter(pk=article_id).first()
     context = {
-        'article_obj':article_obj,
+        'article_obj': article_obj,
         'username': username,
         'blog': blog,
     }
     return render(request, 'article_detail.html', context=context)
+
+
+# 点赞
+def digg(request):
+    article_id = request.POST.get('article_id')
+    is_up = json.loads(request.POST.get('is_up'))
+    user_id = request.user.pk
+
+    obj = models.ArticleUpDown.objects.filter(user_id=user_id, article_id=article_id).first()
+
+    response = {'status': True}
+    if not obj:
+
+        aud = models.ArticleUpDown.objects.create(
+            user_id=user_id,
+            article_id=article_id,
+            is_up=is_up,
+        )
+
+        article_obj = models.Article.objects.filter(pk=article_id)
+        if is_up:
+            article_obj.update(up_count=F('up_count') + 1)
+        else:
+            article_obj.update(down_count=F('down_count') + 1)
+    else:
+        response['status'] = False
+        response['handled'] = obj.is_up
+
+    return JsonResponse(response)

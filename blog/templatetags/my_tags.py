@@ -26,6 +26,7 @@ def get_classification_style(username):
         'month', 'count')
 
     context = {
+        'username': username,
         'category_list': category_list,
         'tag_list': tag_list,
         'date_list': date_list

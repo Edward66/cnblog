@@ -19,6 +19,9 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     re_path(r'^pc-geetest/register', slide_code_auth, name='pcgetcaptcha'),
 
+    # 点赞
+    path('digg/', views.digg),
+
     # media配置
     re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),  # 主要以media开头，后面写什么都行
 
