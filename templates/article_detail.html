@@ -34,6 +34,22 @@
 
     <!-- 评论 -->
     <div class="comments">
+        <ul class="comment_list list-group">
+            {% for comment in comment_list %}
+                <li class="list-group-item">
+                    <div>
+                        <a href="">#{{ forloop.counter }}楼 &nbsp;&nbsp;</a>
+                        <span>{{ comment.created_time | date:'Y-m-d H:i' }} </span> &nbsp;&nbsp;
+                        <a href=""><span>{{ comment.user.username }}</span></a>
+                        <a href="" class="pull-right">回复</a>
+                    </div>
+                    <div class="comment_content">
+                        <p>{{ comment.content }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <p>评论列表</p>
         <p>发表评论</p>
         <p>
             昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50"
@@ -41,13 +57,14 @@
         </p>
         <p>评论内容:</p>
         <p>
-            <textarea name="" id="" cols="60" rows="10"></textarea>
+            <textarea name="" id="comment_content" cols="60" rows="10"></textarea>
         </p>
 
         <button class="btn btn-default" id="comment_btn">提交评论</button>
     </div>
 
     <script>
+        // 点赞请求
         $('#div_digg .action').click(function () {
             let is_up = $(this).hasClass('diggit');
 
@@ -73,6 +90,43 @@
                             $('#digg_tips').html("");
                         }, 1000)
                     }
+                }
+            })
+        });
+
+
+        // 评论请求
+        $('#comment_btn').click(function () {
+            let pid = '';
+            let content = $('#comment_content').val();
+            $.ajax({
+                url: '/comment/',
+                type: 'post',
+                data: {
+                    'csrfmiddlewaretoken': $("[name='csrfmiddlewaretoken']").val(),
+                    'article_id': "{{ article_obj.pk }}",
+                    'content': content,
+                    'pid': pid,
+                },
+                success: function (data) {
+                    let created_time = data.created_time;
+                    let username = data.username;
+                    let content = data.content;
+
+                    let latest_comment = `
+                    <li class="list-group-item">
+                    <div>
+                        <span>${created_time}</span> &nbsp;&nbsp;
+                        <a href=""><span>${username}</span></a>
+                    </div>
+                    <div class="comment_content">
+                        <p>${content}</p>
+                    </div>
+                    </li>`;
+                    $('ul.comment_list').append(latest_comment);
+
+                    // 清空评论框
+                    $('#comment_content').val('');
                 }
             })
         })

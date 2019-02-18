@@ -132,10 +132,13 @@ def article_detail(request, username, article_id):
     blog = user.blog
 
     article_obj = models.Article.objects.filter(pk=article_id).first()
+
+    comment_list = models.Comment.objects.filter(article_id=article_id)
     context = {
-        'article_obj': article_obj,
         'username': username,
         'blog': blog,
+        'comment_list': comment_list,
+        'article_obj': article_obj,
     }
     return render(request, 'article_detail.html', context=context)
 
@@ -165,5 +168,27 @@ def digg(request):
     else:
         response['status'] = False
         response['handled'] = obj.is_up
+
+    return JsonResponse(response)
+
+
+# 评论
+def comment(request):
+    article_id = request.POST.get("article_id")
+    pid = request.POST.get('pid')
+    content = request.POST.get('content')
+    user_id = request.user.pk
+
+    comment_obj = models.Comment.objects.create(
+        user_id=user_id,
+        article_id=article_id,
+        content=content,
+        parent_comment_id=pid
+    )
+
+    response = {}
+    response['created_time'] = comment_obj.created_time.strftime('%Y-%m%d %X')
+    response['username'] = request.user.username
+    response['content'] = content
 
     return JsonResponse(response)

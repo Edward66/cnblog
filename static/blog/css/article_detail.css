@@ -69,3 +69,8 @@ input.author {
     width: 300px;
     font-size: 13px;
 }
+
+.comment_content {
+    margin-top: 10px;
+}
+
