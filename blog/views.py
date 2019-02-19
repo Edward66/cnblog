@@ -3,6 +3,7 @@ import threading
 
 from django.contrib import auth
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.db import transaction
 from django.http import JsonResponse
@@ -232,7 +233,7 @@ def get_comment_tree(request):
 
 
 # 后台管理
-
+@login_required
 def cn_backend(request):
     article_list = models.Article.objects.filter(user=request.user)
 
@@ -243,6 +244,7 @@ def cn_backend(request):
 
 
 # 增加文章
+@login_required
 def add_article(request):
     if request.method == 'POST':
         title = request.POST.get('title')
