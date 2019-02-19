@@ -21,5 +21,23 @@
         </form>
     </div>
 
+
+
 {% endblock %}
+
+{% block script %}
+    <script charset="utf-8" src="/static/blog/kindeditor/kindeditor-all-min.js"></script>
+    <script>
+        KindEditor.ready(function (K) {
+            window.editor = K.create('#id_content', {
+                width: '800px',
+                height: '500px',
+                resizeType: 0,
+            });
+        });
+    </script>
+{% endblock script %}
+
+
+
 
