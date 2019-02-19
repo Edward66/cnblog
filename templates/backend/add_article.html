@@ -26,6 +26,7 @@
 {% endblock %}
 
 {% block script %}
+    <script src="/static/blog/js/jquery-3.3.1.js"></script>
     <script charset="utf-8" src="/static/blog/kindeditor/kindeditor-all-min.js"></script>
     <script>
         KindEditor.ready(function (K) {
@@ -33,6 +34,11 @@
                 width: '800px',
                 height: '500px',
                 resizeType: 0,
+                uploadJson: '/upload/',
+                extraFileUploadParams: {
+                    csrfmiddlewaretoken: $('[name="csrfmiddlewaretoken"]').val()
+                },
+                filePostName: 'upload_img',
             });
         });
     </script>

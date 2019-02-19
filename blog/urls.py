@@ -14,6 +14,9 @@ urlpatterns = [
     # 注册页面
     path('register/', views.register, name='register'),
 
+    # 文件上传
+    path('upload/', views.upload, name='upload'),
+
     # 登陆页面和滑动验证码
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),

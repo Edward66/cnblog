@@ -1,3 +1,4 @@
+import os
 import json
 import threading
 
@@ -259,3 +260,18 @@ def add_article(request):
         return redirect(reverse('blog:backend'))
 
     return render(request, 'backend/add_article.html')
+
+
+def upload(request):
+    img = request.FILES.get('upload_img')
+    path = os.path.join(settings.MEDIA_ROOT, 'add_article_img', img.name)
+    with open(path, 'wb') as f:
+        for line in img:
+            f.write(line)
+
+    response = {
+        'error': 0,
+        'url': f'/media/add_article_img/{img.name}'
+    }
+
+    return JsonResponse(response)
