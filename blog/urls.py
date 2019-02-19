@@ -19,6 +19,10 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     re_path(r'^pc-geetest/register', slide_code_auth, name='pcgetcaptcha'),
 
+    # 后台管理
+    re_path('cn_backend/$', views.cn_backend, name='backend'),
+    re_path('cn_backend/add_article/$', views.add_article, name='add_article'),
+
     # 点赞
     path('digg/', views.digg),
 

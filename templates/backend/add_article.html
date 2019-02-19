@@ -1,0 +1,25 @@
+{% extends 'backend/base.html' %}
+
+{% block content %}
+
+    <div class="add_article">
+        <p class="bg-danger">添加文章</p>
+        <form action="{% url 'blog:add_article' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_title">标题</label>
+                <input type="text" class="form-control" name="title" id="id_title">
+            </div>
+
+
+            <div class="form-group">
+                <label for="id_content">内容</label>
+                <textarea name="content" id="id_content" cols="30" rows="10" class="form-control"></textarea>
+            </div>
+
+            <input type="submit" value="提交" class="btn btn-primary">
+        </form>
+    </div>
+
+{% endblock %}
+

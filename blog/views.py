@@ -229,3 +229,31 @@ def get_comment_tree(request):
 
     # In order to allow non-dict objects to be serialized set the safe parameter to False.
     return JsonResponse(comment_obj, safe=False)
+
+
+# 后台管理
+
+def cn_backend(request):
+    article_list = models.Article.objects.filter(user=request.user)
+
+    context = {
+        'article_list': article_list
+    }
+    return render(request, 'backend/backend.html', context=context)
+
+
+# 增加文章
+def add_article(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+
+        models.Article.objects.filter(user=request.user).create(
+            title=title,
+            user=request.user,
+            content=content
+        )
+
+        return redirect(reverse('blog:backend'))
+
+    return render(request, 'backend/add_article.html')
