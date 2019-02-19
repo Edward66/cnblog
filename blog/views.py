@@ -2,6 +2,8 @@ import os
 import json
 import threading
 
+from bs4 import BeautifulSoup
+
 from django.contrib import auth
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -251,10 +253,20 @@ def add_article(request):
         title = request.POST.get('title')
         content = request.POST.get('content')
 
+        soup = BeautifulSoup(content, 'html.parser')
+        # 过滤script,防止xss攻击
+        for tag in soup.find_all():
+            if tag.name == 'script':
+                tag.decompose()
+
+        # 获取文本进行截取，赋值给desc字段
+        desc = soup.text[0:150] + '...'
+
         models.Article.objects.filter(user=request.user).create(
             title=title,
             user=request.user,
-            content=content
+            desc=desc,
+            content=str(soup)
         )
 
         return redirect(reverse('blog:backend'))
