@@ -50,7 +50,7 @@ class RegForm(forms.Form):
     email = forms.EmailField(
         max_length=32,
         error_messages={
-            'required': '用户名不能为空',
+            'required': '邮箱不能为空',
             'invalid': '请输入正确的邮箱格式',
         },
         label='邮箱',

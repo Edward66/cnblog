@@ -221,10 +221,11 @@ def get_comment_tree(request):
     article_id = request.GET.get('article_id')
 
     comment_obj = list(
-        models.Comment.objects.filter(article_id=article_id).order_by('pk').values('pk', 'content',
-                                                                                   'parent_comment_id',
-                                                                                   'user__username'
-                                                                                   ))
+        models.Comment.objects.filter(article_id=article_id).order_by('pk').values(
+            'pk', 'content',
+            'parent_comment_id',
+            'user__username'
+        ))
 
     # In order to allow non-dict objects to be serialized set the safe parameter to False.
     return JsonResponse(comment_obj, safe=False)
