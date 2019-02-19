@@ -135,3 +135,11 @@ STATICFILES_DIRS = [
 # 与用户上传相关的配置
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# 发送邮件
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = '332638046@qq.com'
+EMAIL_HOST_PASSWORD = 'lwqojsiijipgbjce'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_USE_SSL = True

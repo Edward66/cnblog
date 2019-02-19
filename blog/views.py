@@ -1,5 +1,8 @@
 import json
+import threading
+
 from django.contrib import auth
+from django.core.mail import send_mail
 from django.db.models import F
 from django.db import transaction
 from django.http import JsonResponse
@@ -10,6 +13,7 @@ from blog import models
 from blog.models import UserInfo
 from blog.forms.regForm import RegForm
 from blog.utils.slide_auth_code import pcgetcaptcha
+from cnblog import settings
 
 
 # 登陆
@@ -180,6 +184,8 @@ def comment(request):
     content = request.POST.get('content')
     user_id = request.user.pk
 
+    article_obj = models.Article.objects.filter(pk=article_id).first()
+
     with transaction.atomic():  # 等同于mysql里的事物操作，下面两个操作必须同时成功，只要有一个失败那么都不会执行
         comment_obj = models.Comment.objects.create(
             user_id=user_id,
@@ -197,6 +203,15 @@ def comment(request):
         parent_comment = models.Comment.objects.filter(nid=pid).first()
         response['parent_comment'] = parent_comment.content
         response['parent_name'] = parent_comment.user.username
+
+    # 发送邮件
+    t = threading.Thread(target=send_mail, args=(
+        f"您的文章{article_obj.title}新增了一条评论内容",
+        content,
+        settings.EMAIL_HOST_USER,
+        [request.user.email],
+    ))
+    t.start()
 
     return JsonResponse(response)
 
