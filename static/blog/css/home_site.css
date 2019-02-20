@@ -29,8 +29,9 @@
     margin-top: 16px;
 }
 
+
 .title a:hover {
-    color: #fff;
+    color: orange;
     text-decoration: none;
 }
 

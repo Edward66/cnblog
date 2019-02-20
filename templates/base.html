@@ -18,7 +18,8 @@
     <div class="header_content">
         <p class="title">
             <span>{{ blog.title }}</span>
-            <a href="" class="backend">管理</a>
+            <a href="{% url 'blog:backend' %}" class="backend">管理</a>
+            <a href="{% url 'blog:index' %}" class="backend">首页</a>
         </p>
     </div>
 </div>
