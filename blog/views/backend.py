@@ -1,13 +1,16 @@
 import os
+import re
 
 from bs4 import BeautifulSoup
 
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import JsonResponse
 from django.urls import reverse
 from django.shortcuts import render, redirect
 
 from blog import models
+from blog.forms.articleForm import ArticleForm
 from cnblog import settings
 
 
@@ -25,58 +28,115 @@ def cn_backend(request):
 # 增加文章
 @login_required
 def add_article(request):
+    user = models.UserInfo.objects.filter(username=request.user.username).first()
+    blog_obj = user.blog
+
+    article_forms = ArticleForm()
+    category_obj = models.Category.objects.filter(blog=blog_obj).all()
     if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
+        article_forms = ArticleForm(request.POST)
+        if article_forms.is_valid():
+            title = request.POST.get('title')
+            content = request.POST.get('content')
+            category_id = request.POST.get('category_id')
+            tags = request.POST.get('tags')
+            tags_list = re.split(',|，', tags)
 
-        soup = BeautifulSoup(content, 'html.parser')
-        # 过滤script,防止xss攻击
-        for tag in soup.find_all():
-            if tag.name == 'script':
-                tag.decompose()
+            # 过滤script标签，防止xss攻击
+            soup = BeautifulSoup(content, 'html.parser')
+            for tag in soup.find_all():
+                if tag.name == 'script':
+                    tag.decompose()
 
-        # 获取文本进行截取，赋值给desc字段
-        desc = soup.text[0:150] + '...'
+            # 获取文本进行截取，赋值给desc字段
+            article_forms.desc = soup.text[0:150] + '...'
 
-        models.Article.objects.filter(user=request.user).create(
-            title=title,
-            user=request.user,
-            desc=desc,
-            content=str(soup)
-        )
+            with transaction.atomic():
+                # 增加文章
+                article_obj = models.Article.objects.create(
+                    title=title,
+                    content=content,
+                    category_id=category_id,
+                    user=user
+                )
 
-        return redirect(reverse('blog:backend'))
+                # 增加标签
+                for tag in tags_list:
+                    tag_obj = models.Tag.objects.create(
+                        title=tag,
+                        blog=blog_obj
+                    )
 
-    return render(request, 'backend/add_article.html')
+                    # 增加文章标签关系表
+                    models.Article2Tag.objects.create(
+                        article=article_obj,
+                        tag=tag_obj
+                    )
+
+            return redirect(reverse('blog:backend'))
+        context = {
+            'article_forms': article_forms,
+            'category_obj': category_obj,
+        }
+        return render(request, 'backend/add_article.html', context=context)
+    context = {
+        'article_forms': article_forms,
+        'category_obj': category_obj,
+    }
+    return render(request, 'backend/add_article.html', context=context)
 
 
 # 编辑文章
 @login_required
 def edit_article(request, nid):
-    article_obj = models.Article.objects.filter(nid=nid).first()
+    user = models.UserInfo.objects.filter(username=request.user.username).first()
+    blog_obj = user.blog
+    edit_article_obj = models.Article.objects.filter(nid=nid).first()
+    category_obj = models.Category.objects.filter(blog=blog_obj).all()
+
+    title = edit_article_obj.title
+    content = edit_article_obj.content
+
+    data = {
+        'title': title,
+        'content': content,
+    }
+    article_forms = ArticleForm(data)
 
     if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        soup = BeautifulSoup(content, 'html.parser')
+        article_forms = ArticleForm(request.POST, data)
+        if article_forms.is_valid():
+            title = request.POST.get('title')
+            content = request.POST.get('content')
+            category_id = request.POST.get('category_id')
 
-        for tag in soup.find_all():
-            if tag == 'script':
-                tag.decompose()
+            # 过滤script标签，防止xss攻击
+            soup = BeautifulSoup(content, 'html.parser')
+            for tag in soup.find_all():
+                if tag.name == 'script':
+                    tag.decompose()
 
-        desc = soup.text[0:150] + '...'
+            # 获取文本进行截取，赋值给desc字段
+            article_forms.desc = soup.text[0:150] + '...'
 
-        models.Article.objects.filter(nid=nid).update(
-            title=title,
-            desc=desc,
-            content=str(soup)
-        )
+            models.Article.objects.filter(nid=nid).update(
+                title=title,
+                content=str(soup),
+                category_id=category_id
+            )
 
-        return redirect(reverse('blog:backend'))
+            return redirect(reverse('blog:backend'))
+
+        context = {
+            'article_forms': article_forms,
+
+        }
+        return render(request, 'backend/edit_article.html', context=context)
 
     context = {
-        'article_obj': article_obj,
-
+        'edit_article_obj': edit_article_obj,
+        'category_obj': category_obj,
+        'article_forms': article_forms,
     }
     return render(request, 'backend/edit_article.html', context=context)
 

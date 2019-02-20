@@ -9,16 +9,28 @@
         <p class="bg-danger">编辑文章</p>
         <form action="" method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="id_title">标题</label>
-                <input type="text" name="title" class="form-control" id="id_title" value="{{ article_obj.title }}">
-            </div>
+            {% for article_form in article_forms %}
+                <div class="form-group">
+                    <label for="{{ article_form.auto_id }}">{{ article_form.label }}</label>
+                    {{ article_form }}
+                    <span class="error_info">{{ article_form.errors }}</span>
+                </div>
+            {% endfor %}
 
             <div class="form-group">
-                <label for="id_content">内容</label>
-                <textarea id="id_content"  name="content" cols="30" rows="10"
-                          class="form-control">{{ article_obj.content }}</textarea>
+                <label for="id_category">分类</label>
+
+                <select name="category_id" id="id_category" class="form-control">
+                    {% for category in category_obj %}
+                        {% if edit_article_obj.category == category %}
+                            <option selected value="{{ category.pk }}">{{ category.title }}</option>>
+                        {% else %}
+                            <option value="{{ category.pk }}">{{ category.title }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
             </div>
+
             <input type="submit" value="提交" class="btn btn-primary" id="edit_article">
         </form>
     </div>
