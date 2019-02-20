@@ -26,6 +26,8 @@ urlpatterns = [
     # 后台管理
     re_path('cn_backend/$', backend.cn_backend, name='backend'),
     re_path('cn_backend/add_article/$', backend.add_article, name='add_article'),
+    re_path('cn_backend/edit_article/(\d+)', backend.edit_article),
+    re_path('cn_backend/delete_article/(\d+)', backend.delete_article),
 
     # 点赞
     path('digg/', functions.digg),

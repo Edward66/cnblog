@@ -33,18 +33,30 @@
     margin-top: 20px;
 }
 
-.right-panel{
-    margin-top:10px;
+.right-panel {
+    margin-top: 10px;
 }
+
 .right-panel a {
     text-decoration: none;
 }
 
 
-.add_article{
-    margin-top:10px;
+.add_article {
+    margin-top: 10px;
 }
 
+.tr a:hover {
+    text-decoration: none;
+}
 
+.edit_article {
+    font-size: 18px;
+    padding-left: 18px;
+}
 
+.delete_article {
+    font-size: 18px;
+    padding-left: 18px;
+}
 

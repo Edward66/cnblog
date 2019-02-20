@@ -50,6 +50,48 @@ def add_article(request):
     return render(request, 'backend/add_article.html')
 
 
+# 编辑文章
+@login_required
+def edit_article(request, nid):
+    article_obj = models.Article.objects.filter(nid=nid).first()
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        soup = BeautifulSoup(content, 'html.parser')
+
+        for tag in soup.find_all():
+            if tag == 'script':
+                tag.decompose()
+
+        desc = soup.text[0:150] + '...'
+
+        models.Article.objects.filter(nid=nid).update(
+            title=title,
+            desc=desc,
+            content=str(soup)
+        )
+
+        return redirect(reverse('blog:backend'))
+
+    context = {
+        'article_obj': article_obj,
+
+    }
+    return render(request, 'backend/edit_article.html', context=context)
+
+
+# 删除文章
+@login_required
+def delete_article(request, nid):
+    response = {'status': False}
+    nid = request.POST.get('nid')
+    models.Article.objects.filter(nid=nid).delete()
+    response['status'] = True
+    return JsonResponse(response)
+
+
+# 用户上传文件
 def upload(request):
     img = request.FILES.get('upload_img')
     path = os.path.join(settings.MEDIA_ROOT, 'add_article_img', img.name)
