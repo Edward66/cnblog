@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    <title>{{ request.user.username }}的详情页</title>
+    <title>{{ article_obj.title }}的详情页</title>
 {% endblock %}
 
 {% block css %}
@@ -78,6 +78,11 @@
         <button class="btn btn-default" id="comment_btn">提交评论</button>
     </div>
 
+
+
+{% endblock content %}
+
+{% block script %}
     <script>
         // 点赞请求
         $('#div_digg .action').click(function () {
@@ -202,7 +207,5 @@
                 })
             }
         });
-
     </script>
-
-{% endblock content %}
+{% endblock script %}
