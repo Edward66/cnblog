@@ -94,6 +94,7 @@ def edit_article(request, nid):
     edit_article_obj = models.Article.objects.filter(nid=nid).first()
     category_obj = models.Category.objects.filter(blog=blog_obj).all()
 
+    # 返回到前端的已有信息
     title = edit_article_obj.title
     content = edit_article_obj.content
 
@@ -101,6 +102,7 @@ def edit_article(request, nid):
         'title': title,
         'content': content,
     }
+
     article_forms = ArticleForm(data)
 
     if request.method == 'POST':
@@ -129,7 +131,6 @@ def edit_article(request, nid):
 
         context = {
             'article_forms': article_forms,
-
         }
         return render(request, 'backend/edit_article.html', context=context)
 
