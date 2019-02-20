@@ -6,7 +6,7 @@ from blog.models import UserInfo
 
 # 首页
 def index(request):
-    article_list = models.Article.objects.all()
+    article_list = models.Article.objects.filter(user_id=request.user)  # 首页只显示用户自己的文章
     context = {
         'article_list': article_list,
     }
@@ -56,9 +56,14 @@ def article_detail(request, username, article_id):
     user = UserInfo.objects.filter(username=username).first()
     blog = user.blog
 
-    article_obj = models.Article.objects.filter(pk=article_id).first()
+    article_obj = models.Article.objects.filter(pk=article_id, user__username=username).first()
 
-    comment_list = models.Comment.objects.filter(article_id=article_id)
+    # 在自己的url下，用户只能看到自己的文章内容和评论内容
+    if username != request.user.username:
+        comment_list = None
+    else:
+        comment_list = models.Comment.objects.filter(article_id=article_id)
+
     context = {
         'username': username,
         'blog': blog,
