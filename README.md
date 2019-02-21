@@ -13,6 +13,21 @@
 8. 富文本编辑器
 9. 防止xss攻击
 
+
+# 配置开发环境
+## 使用虚拟环境(virturalenv)
+```
+pip install virtualenv
+mkvirtualenv cnblog -p 'python3.6'
+workon cnblog
+```
+
+# 生成表结构
+```
+./manage.py makemigrations
+./manage.py migrate
+```
+
 # 程序的启动方式
 ./manage.py runserver
 
