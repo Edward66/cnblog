@@ -20,5 +20,5 @@
 配置mysql后在register页面注册
 
 # 程序运行效果
-![cnblog.png]
-![cnblog2.png]
+![cnblog.png](https://github.com/Edward66/cnblog/blob/07-optimization/cnblog.png)
+![cnblog2.png](https://github.com/Edward66/cnblog/blob/07-optimization/cnblog2.png)
