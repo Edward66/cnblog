@@ -70,7 +70,7 @@ class Article(models.Model):
     tags = models.ManyToManyField(
         to='Tag',
         through='Article2Tag',
-        through_fields=('article', 'tag')
+        through_fields=('article', 'tag'),
     )
 
     def __str__(self):

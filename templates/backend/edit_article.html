@@ -7,7 +7,7 @@
 
     <div class="add_article">
         <p class="bg-danger">编辑文章</p>
-        <form action="" method="post">
+        <form action="" method="post" novalidate>
             {% csrf_token %}
             {% for article_form in article_forms %}
                 <div class="form-group">
@@ -16,22 +16,7 @@
                     <span class="error_info">{{ article_form.errors }}</span>
                 </div>
             {% endfor %}
-
-            <div class="form-group">
-                <label for="id_category">分类</label>
-
-                <select name="category_id" id="id_category" class="form-control">
-                    {% for category in category_obj %}
-                        {% if edit_article_obj.category == category %}
-                            <option selected value="{{ category.pk }}">{{ category.title }}</option>>
-                        {% else %}
-                            <option value="{{ category.pk }}">{{ category.title }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-
-            <input type="submit" value="提交" class="btn btn-primary" id="edit_article">
+            <input type="submit" value="提交" class="btn btn-primary">
         </form>
     </div>
 {% endblock %}
