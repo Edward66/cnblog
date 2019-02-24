@@ -1,0 +1,38 @@
+{% extends 'backend/base.html' %}
+
+{% block title %}
+    <title>增加分类</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="add_article">
+        <p class="bg-danger">添加分类</p>
+        <form action="{% url 'blog:add_category' %}" method="post" novalidate>
+            {% csrf_token %}
+            {% for category_form in category_forms %}
+                <div class="form-group">
+                    <label for="{{ category_form.auto_id }}">{{ category_form.label }}</label>
+                    {{ category_form }}
+                    <span class="error_info">{{ category_form.errors }}</span>
+                </div>
+
+            {% endfor %}
+            <input type="submit" value="提交" class="btn btn-primary">
+        </form>
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+    <script src="/static/blog/js/jquery-3.3.1.js"></script>
+    <script charset="utf-8" src="/static/blog/kindeditor/kindeditor-all-min.js"></script>
+    <script src="/static/blog/js/kindeditor.js"></script>
+{% endblock script %}
+
+
+
+

@@ -31,10 +31,11 @@
 <div class="container main_content">
     <div class="row">
         <div class="col-md-3 right-panel">
-            <div class="panel panel-default">
+            <div class="panel panel-default right_area">
                 <div class="panel-heading">操作</div>
                 <div class="panel-body">
-                    <a href="/cn_backend/add_article/">添加文章</a>
+                    <p><a href="{% url 'blog:add_article' %}">添加文章</a></p>
+                    <p><a href="{% url 'blog:add_category' %}">添加分类</a></p>
                 </div>
             </div>
 

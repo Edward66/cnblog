@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.shortcuts import render, redirect
 
 from blog import models
-from blog.forms.articleForm import ArticleForm
+from blog.forms.articleForm import ArticleForm, CategoryForm
 from cnblog import settings
 
 
@@ -111,6 +111,32 @@ def delete_article(request, nid):
     models.Article.objects.filter(nid=nid).delete()
     response['status'] = True
     return JsonResponse(response)
+
+
+@login_required()
+def add_category(request):
+    category_forms = CategoryForm()
+
+    user = models.UserInfo.objects.filter(username=request.user.username).first()
+    blog_obj = user.blog
+    if request.method == 'POST':
+        category_forms = CategoryForm(request.POST)
+        if category_forms.is_valid():
+            title = request.POST.get('title')
+            models.Category.objects.create(
+                title=title,
+                blog=blog_obj
+            )
+            return redirect(reverse('blog:backend'))
+        context = {
+            'category_forms': category_forms
+        }
+        return render(request, 'backend/add_category.html', context=context)
+    context = {
+        'category_forms': category_forms
+    }
+
+    return render(request, 'backend/add_category.html', context=context)
 
 
 # 用户上传文件

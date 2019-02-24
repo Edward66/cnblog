@@ -29,6 +29,9 @@ urlpatterns = [
     re_path('cn_backend/edit_article/(\d+)', backend.edit_article),
     re_path('cn_backend/delete_article/(\d+)', backend.delete_article),
 
+    # 增加分类
+    re_path('cn_backend/add_category/$', backend.add_category, name='add_category'),
+
     # 点赞
     path('digg/', functions.digg),
 

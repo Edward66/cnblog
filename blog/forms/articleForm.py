@@ -35,3 +35,18 @@ class ArticleForm(forms.ModelForm):
                 "required": "分类不能为空",
             },
         }
+
+
+class CategoryForm(forms.Form):
+    title = forms.CharField(
+        max_length=32,
+        label='标题',
+        error_messages={
+            'required': '分类不能为空',
+            'max_length': "不能超过32字符",
+        },
+        widget=forms.widgets.TextInput(
+            attrs={'class': 'form-control'},
+        )
+
+    )
