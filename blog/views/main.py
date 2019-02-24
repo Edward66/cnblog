@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from blog import models
@@ -5,6 +6,7 @@ from blog.models import UserInfo
 
 
 # 首页
+@login_required
 def index(request):
     article_list = models.Article.objects.filter(user_id=request.user)  # 首页只显示用户自己的文章
     context = {
